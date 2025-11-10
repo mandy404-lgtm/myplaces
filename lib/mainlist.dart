@@ -62,7 +62,7 @@ class _MainlistState extends State<Mainlist> {
                   child: ListView.builder(
                     itemCount: placeList.length,
                     itemBuilder: (context, index) {
-                      final place = placeList[index];
+                      var place = placeList[index];
 
                       return SizedBox(
                         height: 220,
@@ -113,7 +113,7 @@ class _MainlistState extends State<Mainlist> {
                               IconButton(
                                 icon: const Icon(Icons.arrow_forward_ios),
                                 onPressed: () {
-                                  final place = placeList[index]; 
+                                  var place = placeList[index]; 
                                   String description = place.description;
                                   String category = place.category;
                                   String contact = place.contact;
@@ -250,34 +250,31 @@ class _MainlistState extends State<Mainlist> {
       );
       if (response.statusCode != 200) {
       print('Error fetching places: ${response.statusCode}');
-      setState(() {
-        isLoading = false;
-        status = 'Error fetching places: ${response.statusCode}';
-      });
+      isLoading = false;
+      status = 'Error fetching places: ${response.statusCode}';
+      setState(() {});
       return;
     }
 
       if (response.body.isEmpty) {
       print('Error fetching places: Empty response');
-      setState(() {
-        isLoading = false;
-        status = 'Error fetching places: Empty response';
-      });
+      isLoading = false;
+      status = 'Error fetching places: Empty response';
+      setState(() {});
       return;
     }
     final List<dynamic> data = json.decode(response.body);
     placeList = data.map<Place>((json) => Place.fromJson(json)).toList();
-    setState(() {
-      isLoading = false;
-      if (placeList.isEmpty) {
+    
+    isLoading = false;
+    if (placeList.isEmpty) {
         status = "No places found.";
-      } 
-    });
+    } 
+    setState(() {});
     }catch (e) {
-      setState(() {
-        isLoading=false;
-        status = "Connection error. Please check your internet.";
-      });   
+      isLoading=false;
+      status = "Connection error. Please check your internet.";
+      setState(() {});   
     }
   }
 }
