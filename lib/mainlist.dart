@@ -63,11 +63,7 @@ class _MainlistState extends State<Mainlist> {
                       String name = placeList[index]['name'];
                       String state = placeList[index]['state'];
                       String imageUrl = placeList[index]['image_url'];
-                      double rating =
-                          double.tryParse(
-                            placeList[index]['rating'].toString(),
-                          ) ??
-                          00;
+                      double rating =double.tryParse(placeList[index]['rating'].toString(),) ??00;
 
                       return SizedBox(
                         height: 220,
