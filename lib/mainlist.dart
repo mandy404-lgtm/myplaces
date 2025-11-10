@@ -102,12 +102,12 @@ class _MainlistState extends State<Mainlist> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                              name,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                              ),
-                                            ),
+                                        name,
+                                        style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        ),
+                                      ),
                                       Text('State: $state'),
                                       Text('Rating: $rating'),
                                     ],
