@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:myplaces/place.dart';
+
 class Mainlist extends StatefulWidget {
   const Mainlist({super.key});
 
@@ -12,7 +14,7 @@ class Mainlist extends StatefulWidget {
 
 class _MainlistState extends State<Mainlist> {
   late double screenWidth, screenHeight;
-  List<dynamic> placeList = [];
+  List<Place> placeList = [];
   String status = "Press the button to fetch places";
   bool isLoading = false;
 
@@ -60,10 +62,7 @@ class _MainlistState extends State<Mainlist> {
                   child: ListView.builder(
                     itemCount: placeList.length,
                     itemBuilder: (context, index) {
-                      String name = placeList[index]['name'];
-                      String state = placeList[index]['state'];
-                      String imageUrl = placeList[index]['image_url'];
-                      double rating =double.tryParse(placeList[index]['rating'].toString(),) ??00;
+                      final place = placeList[index];
 
                       return SizedBox(
                         height: 220,
@@ -80,7 +79,7 @@ class _MainlistState extends State<Mainlist> {
                                 width: 150,
                                 height: 200,
                                 child: Image.network(
-                                  imageUrl,
+                                  place.imageUrl,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
                                       const Icon(
@@ -98,14 +97,14 @@ class _MainlistState extends State<Mainlist> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        name,
+                                        place.name,
                                         style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                         ),
                                       ),
-                                      Text('State: $state'),
-                                      Text('Rating: $rating'),
+                                      Text('State: ${place.state}'),
+                                      Text('Rating: ${place.rating}'),
                                     ],
                                   ),
                                 ),
@@ -114,24 +113,25 @@ class _MainlistState extends State<Mainlist> {
                               IconButton(
                                 icon: const Icon(Icons.arrow_forward_ios),
                                 onPressed: () {
-                                  String description =placeList[index]['description'];
-                                  String category = placeList[index]['category'];
-                                  String contact = placeList[index]['contact'];
-                                  double latitude =double.tryParse(placeList[index]['latitude'].toString(),) ??00;
-                                  double longitude =double.tryParse(placeList[index]['longitude'].toString(),) ??00;
+                                  final place = placeList[index]; 
+                                  String description = place.description;
+                                  String category = place.category;
+                                  String contact = place.contact;
+                                  double latitude = place.latitude;
+                                  double longitude = place.longitude;
 
                                   showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text(name),
+                                        title: Text(place.name),
                                         content: SingleChildScrollView(
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Center(child: Image.network(
-                                                imageUrl,
+                                                place.imageUrl,
                                                 width: 200,
                                                 height: 200,
                                                 fit: BoxFit.cover,
@@ -145,7 +145,7 @@ class _MainlistState extends State<Mainlist> {
                                              
                                               const SizedBox(height: 10),
                                               Text(
-                                                'State: $state',
+                                                'State: ${place.state}',
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                 ),
@@ -265,7 +265,8 @@ class _MainlistState extends State<Mainlist> {
       });
       return;
     }
-    placeList = json.decode(response.body);
+    final List<dynamic> data = json.decode(response.body);
+    placeList = data.map<Place>((json) => Place.fromJson(json)).toList();
     setState(() {
       isLoading = false;
       if (placeList.isEmpty) {
